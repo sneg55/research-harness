@@ -1,5 +1,14 @@
 # Setting up a new project from this harness
 
+## 0. Prerequisites
+
+- **Claude Code CLI** (required). This harness is built around Claude Code's
+  skills, subagents, hooks, and memory system. Without it the em-dash hook won't
+  fire and the skills and agents won't load, so the harness does nothing on its
+  own. Install it from [claude.com/claude-code](https://claude.com/claude-code).
+- **Python 3** for the em-dash hook (preinstalled on macOS and most Linux).
+- **`gh`** (optional) only if you want Claude to create the GitHub repo for you.
+
 ## 1. Copy the harness
 
 ```bash

@@ -4,6 +4,47 @@ A reusable Claude Code setup for research and deliverable-writing projects. Clon
 it, fill in the placeholders, and you start with a memory system, writing/sourcing
 discipline, and pre-ship quality gates already wired up.
 
+## Setup
+
+### Prerequisite
+
+You need the **Claude Code CLI**. This harness is built around Claude Code's
+skills, subagents, hooks, and memory system; without it the hooks won't fire and
+the skills and agents won't load. Install it from
+[claude.com/claude-code](https://claude.com/claude-code), then open this repo as
+your working directory.
+
+> The em-dash hook needs Python 3 (preinstalled on macOS and most Linux). `gh` is
+> optional, only for creating the GitHub repo.
+
+### Fastest: let the agent set it up
+
+Open this repo in Claude Code and say:
+
+> read SETUP.md and set up my project from this harness
+
+Claude reads `SETUP.md` and `CLAUDE.md`, then walks you through filling the
+placeholders, customizing the project glossary, and making the first commit.
+
+### Manual
+
+```bash
+cp -R research-harness my-new-project
+cd my-new-project
+rm -rf .git && git init
+grep -rn '{{' . --include='*.md'   # every placeholder left to fill
+```
+
+Then follow `SETUP.md` step by step: replace each `{{PLACEHOLDER}}`, customize the
+glossary, verify the hook fires, and commit.
+
+### Using the skills in another project
+
+The bundled skills (`deliverable-check`, `dream`, `remember`) live in
+`.claude/skills/` and are available automatically once this repo is your working
+directory. To pull them into a different project, copy the folder you want from
+`.claude/skills/` into that project's `.claude/skills/`.
+
 ## What's inside
 
 | Piece | Path | Does |
@@ -138,7 +179,7 @@ read, it's a note in `research/` or `docs/`.
 3. Meeting notes get digested into memory and, where warranted, a research note.
 4. Before anything ships to a stakeholder, run `deliverable-check`, then the `citation-checker` and `style-reviewer` subagents for number-heavy or external docs.
 
-## Quick start
+## More detail
 
-See `SETUP.md`. In short: copy this directory, replace every `{{PLACEHOLDER}}`,
-customize the project glossary, and commit.
+Full step-by-step setup, including the hook-fires test and the
+`settings.local.json` note, is in `SETUP.md`.
