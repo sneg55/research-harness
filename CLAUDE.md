@@ -59,9 +59,26 @@ type: {{user, feedback, project, reference}}
 {{memory content}}
 ```
 
-Store memory files in the `memory/` directory. Add a one-line pointer in
-`memory/MEMORY.md`. (If your harness uses an auto-memory directory under
-`~/.claude` instead, store them there and keep `memory/MEMORY.md` as the index.)
+### Where memory lives (single source of truth)
+
+The repo `memory/` directory is the **only** place memories are stored. Each
+memory is one `.md` file there, indexed by a one-line pointer in
+`memory/MEMORY.md`. This tree is checked into git, so memory travels with the
+project.
+
+Do **not** write memories to any other location. In particular:
+
+- The harness auto-memory path
+  (`~/.claude/projects/<project>/memory/`) is symlinked to this repo's `memory/`
+  directory, so anything the harness writes there lands in the committed tree.
+  If you set this project up on a new machine, recreate that symlink:
+  `ln -s <repo>/memory ~/.claude/projects/<project-slug>/memory`
+- `CLAUDE.local.md` (if present) is for machine-specific, **uncommitted**
+  preferences and overrides only. It is gitignored and is **not** a place to
+  store memory entries. Memories always go in `memory/`.
+
+When you save a memory: write the file in `memory/`, then add its one-line
+pointer to `memory/MEMORY.md`.
 
 ---
 

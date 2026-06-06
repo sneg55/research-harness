@@ -60,10 +60,24 @@ inside the project, or set `CLAUDE_PROJECT_DIR` to the file's directory.)
 
 ## 5. Memory
 
-Memory files go in `memory/` with a one-line pointer in `memory/MEMORY.md`. If
-your Claude Code harness uses an auto-memory directory under `~/.claude` instead,
-store the files there and keep `memory/MEMORY.md` as the in-repo index. Either
-way the format in `memory/README.md` applies.
+Memory lives in **one** place: the repo `memory/` directory, with a one-line
+pointer per file in `memory/MEMORY.md`. The format is in `memory/README.md`.
+
+Claude Code also injects an auto-memory path under
+`~/.claude/projects/<project-slug>/memory/`. To keep everything in the single
+committed tree, symlink that path to the repo's `memory/` directory after
+`git init`:
+
+```bash
+# <project-slug> is the project dir path with / replaced by - and a leading -,
+# e.g. /Users/me/code/my-new-project -> -Users-me-code-my-new-project
+slug=$(pwd | sed 's:/:-:g')
+mkdir -p ~/.claude/projects/"$slug"
+ln -s "$PWD/memory" ~/.claude/projects/"$slug"/memory
+```
+
+Now anything written to either path lands in the repo. Do not store memory in
+`CLAUDE.local.md`; that file is for machine-specific, uncommitted prefs only.
 
 ## 6. First commit
 

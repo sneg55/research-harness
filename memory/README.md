@@ -7,6 +7,11 @@ into context each session; the individual files are recalled on relevance.
 Save only information NOT derivable from the project state (code, git history,
 file structure).
 
+This directory is the single source of truth for memory. The harness
+auto-memory path (`~/.claude/projects/<project-slug>/memory/`) is symlinked here,
+so both resolve to the same committed tree. `CLAUDE.local.md` is for
+machine-specific uncommitted prefs only, never memory entries.
+
 ## Four types
 
 | Type | Stores | Save when |
