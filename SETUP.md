@@ -42,21 +42,19 @@ context where the synonym is allowed (verbatim transcripts, imported reference
 texts, a literal API param). Add a grep per banned term to the Step 1 scan block
 in `SKILL.md`. Also pin the canonical spelling of the project and product names.
 
-## 4. Verify the hook fires
+## 4. Verify the hooks fire
 
-The em-dash hook is registered in `.claude/settings.json` and runs on every
-Write/Edit. Test it:
+Two PostToolUse hooks are registered in `.claude/settings.json` and run on every
+Write/Edit: `check-em-dash.py` (blocks em dashes, R1) and `check-prose.py` (flags
+time estimates and unsourced figures, R14 and R2). The committed test exercises
+both:
 
 ```bash
-printf '# t\nan em dash \xe2\x80\x94 here\n' > /tmp/t.md
-CLAUDE_PROJECT_DIR="$PWD" python3 .claude/hooks/check-em-dash.py <<'JSON'
-{"tool_input": {"file_path": "/tmp/t.md"}}
-JSON
-echo "exit: $?"   # expect exit 2 and a flagged line
+bash scripts/test-hooks.sh      # expect "hooks: 8 passed, 0 failed"
 ```
 
-(The hook only flags files inside `CLAUDE_PROJECT_DIR`, so the test path must be
-inside the project, or set `CLAUDE_PROJECT_DIR` to the file's directory.)
+Run it again any time you edit a hook. (The hooks only flag `.md` files inside
+`CLAUDE_PROJECT_DIR`, so a hand test path must be inside the project.)
 
 ## 5. Memory
 
@@ -65,8 +63,15 @@ pointer per file in `memory/MEMORY.md`. The format is in `memory/README.md`.
 
 Claude Code also injects an auto-memory path under
 `~/.claude/projects/<project-slug>/memory/`. To keep everything in the single
-committed tree, symlink that path to the repo's `memory/` directory after
-`git init`:
+committed tree, that path must be a symlink to the repo's `memory/` directory.
+`scripts/setup.sh` computes the slug and creates the link for you (it also runs
+the placeholder check and the hook tests), so the simplest path is:
+
+```bash
+bash scripts/setup.sh
+```
+
+To do it by hand instead:
 
 ```bash
 # <project-slug> is the project dir path with / replaced by - and a leading -,

@@ -50,14 +50,18 @@ directory. To pull them into a different project, copy the folder you want from
 | Piece | Path | Does |
 | --- | --- | --- |
 | Project instructions | `CLAUDE.md` | Memory system, git safety, writing/sourcing discipline, project placeholders |
+| Writing rules (canonical) | `docs/writing-rules.md` | The 14 rules (R1 to R14) in one place; the skill and agents reference it so nothing drifts |
 | Memory scaffold | `memory/` | `MEMORY.md` index plus the four-type memory format documented |
+| Research note template | `research/TEMPLATE.md` | Starting point for a note, with `[S#]` source markers and a Sources block |
 | Em-dash hook | `.claude/hooks/check-em-dash.py` | PostToolUse hook that blocks em dashes in Markdown at write time |
-| Hook wiring | `.claude/settings.json` | Registers the hook on Write/Edit/MultiEdit |
-| `deliverable-check` skill | `.claude/skills/deliverable-check/` | Pre-ship checklist: 14 writing and sourcing rules with line-level findings |
+| Prose hook | `.claude/hooks/check-prose.py` | PostToolUse hook that flags time estimates (R14) and unsourced figures (R2) at write time |
+| Hook wiring | `.claude/settings.json` | Registers both hooks on Write/Edit/MultiEdit |
+| `deliverable-check` skill | `.claude/skills/deliverable-check/` | Pre-ship checklist: mechanical scans plus a judged pass against R1 to R14 |
 | `dream` skill | `.claude/skills/dream/` | Consolidates memory: review, merge, prune, and re-index memory files |
 | `remember` skill | `.claude/skills/remember/` | Reviews loose memory entries and proposes promotions to CLAUDE.md or shared memory |
-| `citation-checker` agent | `.claude/agents/citation-checker.md` | Audits every figure for a traceable source; flags invented numbers |
+| `citation-checker` agent | `.claude/agents/citation-checker.md` | Validates every figure against recorded `[S#]` sources; web search is the fallback |
 | `style-reviewer` agent | `.claude/agents/style-reviewer.md` | Catches structural/rhetorical problems a linter misses (slope, attribution, scaffolding) |
+| Setup + test scripts | `scripts/` | `setup.sh`, `check-setup.sh`, `test-hooks.sh` |
 | Directory scaffold | `research/ analysis/ docs/ scripts/` | Where notes, analysis scripts, docs, and utilities live |
 
 ## Folder structure
@@ -68,15 +72,17 @@ research-harness/
 ├── README.md           This file
 ├── SETUP.md            How to spin up a real project from the template
 ├── research/           Research notes, analysis, and findings (Markdown)
+│   └── TEMPLATE.md       Copy to start a note: source markers + Sources block
 ├── analysis/           Short, focused scripts for data analysis and prototyping
 ├── docs/               Structured documentation and reference material
-├── scripts/            Utility scripts
+│   └── writing-rules.md  Canonical R1 to R14; the skill and agents reference it
+├── scripts/            setup.sh, check-setup.sh, test-hooks.sh
 ├── memory/             Persistent memory files plus the MEMORY.md index
 │   ├── MEMORY.md         The index loaded into context each session
 │   └── README.md         The four memory types and the file format
 └── .claude/
     ├── settings.json     Hook wiring (shared); settings.local.json is per-machine
-    ├── hooks/            check-em-dash.py and any other write-time gates
+    ├── hooks/            check-em-dash.py, check-prose.py
     ├── skills/           deliverable-check, dream, remember
     └── agents/           citation-checker, style-reviewer
 ```
@@ -103,9 +109,10 @@ What goes where:
 3. **Correct once.** When Claude does something the wrong way, say so. The
    correction becomes a `feedback` memory so you don't repeat it. Confirmations of
    a non-obvious approach that worked are worth saving too.
-4. **Write prose clean from the start.** The em-dash hook blocks em dashes at write
-   time, so drafts stay compliant without a cleanup pass. The broader writing and
-   sourcing rules live in `CLAUDE.md`: no time estimates, no invented numbers.
+4. **Write prose clean from the start.** Two write-time hooks keep drafts
+   compliant without a cleanup pass: `check-em-dash.py` blocks em dashes, and
+   `check-prose.py` flags time estimates and unsourced figures. The full rule set
+   (R1 to R14) lives in `docs/writing-rules.md`.
 5. **Gate every stakeholder deliverable.** Before a doc leaves the project, run the
    `deliverable-check` skill. For number-heavy or external docs, also run the
    `citation-checker` and `style-reviewer` subagents. Run the `humanizer` skill

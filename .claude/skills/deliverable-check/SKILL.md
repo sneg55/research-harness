@@ -40,78 +40,21 @@ grep -noE '[0-9]+(\.[0-9]+)?%|\$[0-9][0-9,]*' "$F" | head -40
 ## Step 2: Judge each rule
 
 Mechanical scans flag candidates, not verdicts. Read each hit in context and
-decide. The rules, with their judgment calls:
+decide. The canonical rule text and judgment calls live in
+`docs/writing-rules.md` (R1 to R14). Read that file, then walk every Step 1 hit
+against the matching rule. Do not restate the rules here; the rules file is the
+single source of truth, so it cannot drift from what the agents enforce.
 
-**1. No em dashes.** Banned in all prose, including tables and chat. Em dash
-U+2014 and horizontal bar U+2015 are hard fails. En dash U+2013 is allowed only
-in a numeric range, and even there prefer "to" or a hyphen. Fix with a comma,
-parentheses, two sentences, a colon, or "vs."/"or"/"to".
+Skill-specific operational notes:
 
-**2. No unsourced or invented numbers.** For every specific figure (%, $, rate,
-pass-rate, audience size, comp), ask: is there a traceable primary source? If
-not, it must be reframed with sourceable evidence pointing at the same
-conclusion, labeled illustrative/estimate with round numbers, or cut. "Sounds
-right" is not a source. Bounding arguments beat fabricated point estimates.
-Defer deep sourcing judgment to the `citation-checker` subagent for any
-number-heavy doc.
-
-**3. No invented requirements.** Every "what X needs" item must trace to the
-spec, a transcript, a stated decision, or a documented constraint. Don't
-pattern-match ("it's enterprise, so SOC 2 must be required"). Unsourced-but-
-useful items become open questions for the decision owner, not fixed
-requirements.
-
-**4. Exec-summary bullets are findings only.** Each bullet states a conclusion,
-a binding constraint, an open decision, or a reframe. No number restatement, no
-revenue-line/segment enumeration, no prior-sprint references. 60 to 100 words
-per bullet; if longer it's doing the body's work.
-
-**5. No process attribution.** Scrub "per [name]", "[name] confirmed", "per Part
-1", "Part 1 concluded", "Apr 15 framing", "as discussed". State conclusions
-flat. Exception: authoritative external evidence the reader must evaluate (a
-regulator briefing, an agency ruling, a public dataset) is a real citation, not
-attribution.
-
-**6. Terminology: enforce the project glossary.** Enforce the project's canonical
-terms over their synonyms. Fill in the glossary for this project: each entry is a
-preferred term, the banned synonym, and any contexts where the synonym is allowed
-(verbatim transcripts, imported reference texts, a literal API param).
-
-**7. Spelling: canonical project and product names.** Normalize speech-to-text or
-common misspellings of the project and product names in any synthesized doc.
-Verbatim transcripts may keep the original.
-
-**8. Name actual owners.** Owner/responsible/decision-maker columns in internal
-deliverables name the person, not a generic "Founder/PM/lead" label. External
-briefs keep generic labels (see rule 12).
-
-**9. No scaffolding.** Cut meta-structure: Decision target/owner/Scope header
-blocks, "what this does and does not lock" sections, a Sources section that
-duplicates inline links, and requirements lists that restate the spec. Cut
-mid-sentence bolded inline labels (`**Topic.** ...`); use prose with the topic
-in the topic sentence, or a real subheading.
-
-**10. No restating known info.** Drop Frame/Scope/Intro/Context sections for
-internal readers who know the project. Open with the content. Setup paragraphs
-earn their place only for outside readers.
-
-**11. No unrelated context / scope bleed.** Each doc is scoped to its own
-decision. Don't recap adjacent decisions to show awareness. Boundary-fencing
-("this doesn't lock X") earns its place only when X is a real confusion risk for
-this doc.
-
-**12. External-brief jargon (counsel/partner/investor only).** Drop internal
-phase/layer/option/config labels, sprint, scope §, internal cohort names,
-internal acronyms, raw math symbols. Use the project's canonical external
-framing. Industry vocabulary the recipient knows stays.
-
-**13. No slope.** Lead with limitations and trade-offs, not benefits. Don't
-frame a shared weakness as an advantage. A cost hidden elsewhere is not a free
-benefit. Ground volume/revenue claims in realistic numbers.
-
-**14. No time estimates.** Never size work in hours/days/weeks. Use concrete
-units: lines of code, files touched, item counts, token count. If genuinely
-unknown, say so ("unknown, need to read X first") rather than guessing in time.
+- The grep block covers R1 (em dashes), R5 (attribution), R14 (time estimates),
+  R9 (scaffolding headers), and R2 (figures, listed for manual sourcing review).
+  R3, R4, R6 to R8, and R10 to R13 are judgment-only: no grep substitutes for
+  reading the doc.
+- R2: for any number-heavy doc, hand sourcing judgment to the `citation-checker`
+  subagent rather than ruling on each figure here.
+- R6, R7: customize the PROJECT GLOSSARY greps in Step 1 for this project's
+  banned synonyms and canonical names.
 
 ## Step 3: Humanizer reminder
 

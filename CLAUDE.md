@@ -84,51 +84,26 @@ pointer to `memory/MEMORY.md`.
 
 ## Writing and Sourcing Discipline
 
-These rules apply to all prose, analysis, and deliverables in this project.
+The full, numbered rule set (R1 to R14) lives in `docs/writing-rules.md`. That
+file is the single source of truth; the `deliverable-check` skill and the
+`citation-checker` and `style-reviewer` agents reference it by R-number. Read it
+before writing any deliverable. The three rules the project owner is most burned
+by, in brief:
 
-### No time estimates
+- **No made-up numbers (R2).** Never present an invented figure as fact. Source
+  it, label it illustrative with round numbers, or cut it. In `research/` notes
+  every figure carries a `[S#]` marker resolving to the note's Sources block.
+- **No time estimates (R14).** Never size work in hours, days, or weeks. Use
+  concrete units: lines of code, files touched, item counts, token count.
+- **No em dashes (R1).** Banned in all prose. Replace with a comma, parentheses,
+  two sentences, a colon, or "vs."/"or"/"to".
 
-Never estimate work in hours, days, or weeks. Use concrete units instead: lines
-of code, files touched, item counts, or token count. If the size is genuinely
-unknown, say "unknown, need to read X first" rather than guessing in time units.
+Two PostToolUse hooks enforce these at write time on Markdown files:
+`check-em-dash.py` (R1, hard block) and `check-prose.py` (R2 and R14, advisory).
 
-**Why:** time estimates for this kind of work are made up. They don't reflect
-actual effort and mislead planning. Size estimates are verifiable.
-
-### No made-up numbers
-
-Never invent specific dollar amounts, percentages, market rates, comp data,
-costs, or any other figures presented as factual. If real data isn't available,
-either (a) do actual research (web search, ask the user for the source), or (b)
-clearly label every figure as "illustrative" / "rough estimate" / "placeholder
-pending research" and use round numbers, not fake-precision ones.
-
-**Why:** pro-formas, market analyses, and strategic docs become misleading when
-invented numbers are presented as researched. Tables of line items with specific
-dollar amounts are especially dangerous because they imply precision.
-
-**How to apply:**
-1. Before citing any specific number, ask: do I actually know this, or am I
-   generating a plausible-looking estimate?
-2. Default assumption: when the user asks for analysis, they want researched
-   numbers, not estimates. If research is required, say so and ask whether to
-   proceed with research or with explicitly-labeled estimates.
-3. If using a pro-forma table without researched inputs, every cell needs an
-   "[est]" tag or the whole table needs a banner labeling it illustrative.
-4. The rule covers: market prices, comp data, costs, tax rates, interest rates,
-   conversion rates, traffic stats, audience sizes, salary ranges, and any other
-   specific number that can be verified or sourced.
-
-### No em dashes
-
-Em dashes (U+2014) and horizontal bars (U+2015) are banned in all prose.
-Replace with a comma, parentheses, two sentences, a colon, or "vs."/"or"/"to".
-The `check-em-dash.py` PostToolUse hook enforces this at write time.
-
-### Pre-ship gate
-
-Before any document goes to a stakeholder, run the `deliverable-check` skill,
-and for number-heavy docs the `citation-checker` and `style-reviewer` subagents.
+**Pre-ship gate.** Before any document goes to a stakeholder, run the
+`deliverable-check` skill, and for number-heavy docs the `citation-checker` and
+`style-reviewer` subagents.
 
 ---
 
@@ -162,6 +137,18 @@ spelling of the project and product names. The `deliverable-check` skill and
 
 ### Conventions
 
-- All research documents in Markdown
+- All research documents in Markdown. Start a note from `research/TEMPLATE.md`.
+- Provenance as you go: every specific figure or factual claim in a `research/`
+  note carries a `[S#]` source marker that resolves to the note's `## Sources`
+  block. This is what `citation-checker` validates and `check-prose.py` looks for.
 - Analysis scripts stay short and focused
-- No build system, no dependencies unless truly necessary
+- No build system. The only dependency is Python 3 (for the hooks) and bash (for
+  the `scripts/` helpers).
+
+### Scripts
+
+- `scripts/setup.sh`: one-shot setup for a project spun up from the harness
+  (memory symlink, placeholder check, hook tests). Idempotent.
+- `scripts/check-setup.sh`: fails if any `{{PLACEHOLDER}}` is unfilled.
+- `scripts/test-hooks.sh`: committed tests for both write-time hooks. Run after
+  editing a hook.
