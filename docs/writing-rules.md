@@ -1,3 +1,8 @@
+---
+status: canonical
+summary: The numbered R1–R14 writing and sourcing rule set; single source of truth enforced by the hooks, deliverable-check skill, and review agents.
+---
+
 # Writing and Sourcing Rules
 
 Canonical, numbered rule set for all prose, analysis, and deliverables in this

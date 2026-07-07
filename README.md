@@ -55,13 +55,16 @@ directory. To pull them into a different project, copy the folder you want from
 | Research note template | `research/TEMPLATE.md` | Starting point for a note, with `[S#]` source markers and a Sources block |
 | Em-dash hook | `.claude/hooks/check-em-dash.py` | PostToolUse hook that blocks em dashes in Markdown at write time |
 | Prose hook | `.claude/hooks/check-prose.py` | PostToolUse hook that flags time estimates (R14) and unsourced figures (R2) at write time |
-| Hook wiring | `.claude/settings.json` | Registers both hooks on Write/Edit/MultiEdit |
+| Index-stale hook | `.claude/hooks/check-index-stale.py` | PostToolUse hook that reminds you to rebuild `INDEX.md` when a doc changes |
+| Hook wiring | `.claude/settings.json` | Registers all three hooks on Write/Edit/MultiEdit |
+| Generated index | `INDEX.md` + `scripts/build_index.py` | One map of every authored doc (status + summary per file) so the right file is one read away |
+| Frontmatter tooling | `scripts/frontmatter.py`, `scripts/seed_frontmatter.py` | Shared no-dep parser and a one-shot backfill for adopting an existing corpus |
 | `deliverable-check` skill | `.claude/skills/deliverable-check/` | Pre-ship checklist: mechanical scans plus a judged pass against R1 to R14 |
 | `dream` skill | `.claude/skills/dream/` | Consolidates memory: review, merge, prune, and re-index memory files |
 | `remember` skill | `.claude/skills/remember/` | Reviews loose memory entries and proposes promotions to CLAUDE.md or shared memory |
 | `citation-checker` agent | `.claude/agents/citation-checker.md` | Validates every figure against recorded `[S#]` sources; web search is the fallback |
 | `style-reviewer` agent | `.claude/agents/style-reviewer.md` | Catches structural/rhetorical problems a linter misses (slope, attribution, scaffolding) |
-| Setup + test scripts | `scripts/` | `setup.sh`, `check-setup.sh`, `test-hooks.sh` |
+| Setup + test scripts | `scripts/` | `setup.sh`, `check-setup.sh`, `test-hooks.sh`, `test-index.sh` |
 | Directory scaffold | `research/ analysis/ docs/ scripts/` | Where notes, analysis scripts, docs, and utilities live |
 
 ## Folder structure
@@ -71,18 +74,19 @@ research-harness/
 ├── CLAUDE.md            Project instructions Claude loads every session
 ├── README.md           This file
 ├── SETUP.md            How to spin up a real project from the template
+├── INDEX.md            Generated map of every authored doc (read it first)
 ├── research/           Research notes, analysis, and findings (Markdown)
 │   └── TEMPLATE.md       Copy to start a note: source markers + Sources block
 ├── analysis/           Short, focused scripts for data analysis and prototyping
 ├── docs/               Structured documentation and reference material
 │   └── writing-rules.md  Canonical R1 to R14; the skill and agents reference it
-├── scripts/            setup.sh, check-setup.sh, test-hooks.sh
+├── scripts/            setup + tests, plus build_index.py / seed_frontmatter.py / frontmatter.py
 ├── memory/             Persistent memory files plus the MEMORY.md index
 │   ├── MEMORY.md         The index loaded into context each session
 │   └── README.md         The four memory types and the file format
 └── .claude/
     ├── settings.json     Hook wiring (shared); settings.local.json is per-machine
-    ├── hooks/            check-em-dash.py, check-prose.py
+    ├── hooks/            check-em-dash.py, check-prose.py, check-index-stale.py
     ├── skills/           deliverable-check, dream, remember
     └── agents/           citation-checker, style-reviewer
 ```

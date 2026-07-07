@@ -2,12 +2,15 @@
 title: <one-line topic>
 date: YYYY-MM-DD
 status: draft
+summary: <one line for INDEX.md: what this note answers>
 ---
 
 # <Topic>
 
 > Copy this file to start a research note: `cp research/TEMPLATE.md research/<topic>.md`.
 > Delete this quote block and fill the sections. One topic per file.
+> `status` and `summary` feed the generated `INDEX.md` (see CLAUDE.md). Bump
+> `status` from `draft` to `working` once the note has real findings.
 
 ## Question
 

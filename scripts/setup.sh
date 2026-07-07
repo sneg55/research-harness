@@ -5,6 +5,7 @@
 #      of truth), computing the project slug so you do not have to.
 #   2. Warns if any {{PLACEHOLDER}} is still unfilled.
 #   3. Runs the committed hook tests so you know the write-time gates fire.
+#   4. Tests the index tooling and builds the first INDEX.md.
 #
 # Run from anywhere: bash scripts/setup.sh
 set -euo pipefail
@@ -31,6 +32,11 @@ fi
 echo
 echo "== 3. hook tests =="
 bash "$root/scripts/test-hooks.sh" "$root"
+
+echo
+echo "== 4. index tooling =="
+bash "$root/scripts/test-index.sh" "$root"
+python3 "$root/scripts/build_index.py"
 
 echo
 echo "Setup complete."

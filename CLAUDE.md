@@ -107,6 +107,52 @@ Two PostToolUse hooks enforce these at write time on Markdown files:
 
 ---
 
+## Repository Index and Frontmatter
+
+**Read [`INDEX.md`](INDEX.md) first.** It is a generated map of every authored
+doc, with a `status` and one-line `summary` per file, grouped by directory, with
+superseded and frozen docs collapsed at the bottom. It exists so you (or an LLM
+landing cold) can find the right file, and tell current from stale, in one read
+instead of grepping the tree.
+
+Every authored `.md` carries YAML frontmatter with two required fields and a few
+optional ones:
+
+```yaml
+---
+status: working          # required (see vocabulary below)
+summary: One line for the index, what this file is.   # required
+version: 0.3             # optional; living/versioned docs may keep it in the body instead
+tags: [markets, onchain] # optional
+supersedes: ../old.md    # optional
+superseded_by: null      # optional (pair with the above)
+---
+```
+
+**`status` answers "should I treat this as current truth?":**
+
+| status | meaning |
+|--------|---------|
+| `canonical` | authoritative reference, cite freely |
+| `working` | current findings/analysis, not authoritative |
+| `source` | primary input (transcript, inbound doc); cite as evidence, not as fact |
+| `draft` | in progress, not yet reliable |
+| `superseded` | replaced, follow `superseded_by` |
+| `frozen` | archived, do **not** cite |
+
+`updated` is derived from git and the group is derived from the path, so neither
+lives in frontmatter (nothing to keep in sync). When a file carries no `status`,
+the generator infers one from its location (`build_index.py` `STATUS_RULES`), but
+prefer to set it explicitly.
+
+**Keep the index fresh:** run `python3 scripts/build_index.py` after adding,
+moving, or re-statusing a doc. The `check-index-stale.py` hook prints an advisory
+reminder when an authored `.md` is newer than `INDEX.md`. Validate with
+`python3 scripts/build_index.py --check` (flags missing/unknown frontmatter and a
+stale index). Backfill an existing corpus with `python3 scripts/seed_frontmatter.py`.
+
+---
+
 ## Git Safety
 
 - Never force push
@@ -129,6 +175,7 @@ spelling of the project and product names. The `deliverable-check` skill and
 
 ### Repository Structure
 
+- `INDEX.md`: generated map of every authored doc (read it first; see above)
 - `research/`: research notes, analysis, and findings (Markdown)
 - `analysis/`: scripts for data analysis and quick prototyping
 - `docs/`: structured documentation and reference material
@@ -148,7 +195,13 @@ spelling of the project and product names. The `deliverable-check` skill and
 ### Scripts
 
 - `scripts/setup.sh`: one-shot setup for a project spun up from the harness
-  (memory symlink, placeholder check, hook tests). Idempotent.
+  (memory symlink, placeholder check, hook tests, first index build). Idempotent.
 - `scripts/check-setup.sh`: fails if any `{{PLACEHOLDER}}` is unfilled.
 - `scripts/test-hooks.sh`: committed tests for both write-time hooks. Run after
   editing a hook.
+- `scripts/build_index.py`: regenerates `INDEX.md` from frontmatter (`--check`
+  validates without writing). Config block at the top maps paths to statuses.
+- `scripts/seed_frontmatter.py`: backfills `status` + `summary` into docs that
+  lack frontmatter (for adopting an existing corpus). Idempotent.
+- `scripts/frontmatter.py`: shared no-dep frontmatter parser used by both.
+- `scripts/test-index.sh`: committed tests for the index tooling.
