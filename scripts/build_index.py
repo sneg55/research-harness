@@ -11,15 +11,8 @@ Usage:
     python3 scripts/build_index.py           # (re)write INDEX.md
     python3 scripts/build_index.py --check    # validate frontmatter + report staleness (no write)
 
-# ---------------------------------------------------------------------------
-# CONFIG: this is the block a project spun up from the harness edits.
-# Everything below CONFIG is generic and rarely needs changing.
-# ---------------------------------------------------------------------------
-
-Add a top-level content dir to AUTHORED_ROOTS. Map a path prefix to the status a
-file there gets when it carries no `status` of its own via STATUS_RULES (first
-match wins; DEFAULT_STATUS if none match). List any imported/vendored subtree in
-VENDORED so it is linked once rather than enumerated file by file.
+The CONFIG block below is the only part a project spun up from the harness edits
+(see the inline comments there); everything else is generic.
 """
 
 import argparse
@@ -136,6 +129,12 @@ def first_heading(body):
         if s.startswith("#"):
             return s.lstrip("#").strip()
     return ""
+
+
+def _sanitize(text):
+    """Keep INDEX.md em-dash-clean (R1) even when a summary is derived from a
+    source doc whose heading/prose uses dashes."""
+    return text.replace(" — ", ", ").replace("—", ", ").replace("–", "-")
 
 
 def load_records(root):

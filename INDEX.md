@@ -8,16 +8,16 @@
 
 | file | status | v | summary | updated |
 |------|--------|---|---------|---------|
-| [writing-rules.md](docs/writing-rules.md) | canonical |  | The numbered R1–R14 writing and sourcing rule set; single source of truth enforced by the hooks, deliverable-check skill, and review agents. | 2026-06-07 |
+| [writing-rules.md](docs/writing-rules.md) | canonical |  | The numbered R1–R14 writing and sourcing rule set; single source of truth enforced by the hooks, deliverable-check skill, and review agents. | 2026-07-07 |
 
 ## docs
 
 | file | status | v | summary | updated |
 |------|--------|---|---------|---------|
-| [writing-rules.md](docs/writing-rules.md) | canonical |  | The numbered R1–R14 writing and sourcing rule set; single source of truth enforced by the hooks, deliverable-check skill, and review agents. | 2026-06-07 |
+| [writing-rules.md](docs/writing-rules.md) | canonical |  | The numbered R1–R14 writing and sourcing rule set; single source of truth enforced by the hooks, deliverable-check skill, and review agents. | 2026-07-07 |
 
 ## research
 
 | file | status | v | summary | updated |
 |------|--------|---|---------|---------|
-| [TEMPLATE.md](research/TEMPLATE.md) | draft |  | <one line for INDEX.md: what this note answers> | 2026-06-07 |
+| [TEMPLATE.md](research/TEMPLATE.md) | draft |  | <one line for INDEX.md: what this note answers> | 2026-07-07 |
